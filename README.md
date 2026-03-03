@@ -1,32 +1,32 @@
-# ROS 2 Turtle Navigation Project (Jazzy)
+# ROS 2 Turtlesim 闭环导航控制项目
 
-本项目基于 **Ubuntu 24.04** 与 **ROS 2 Jazzy** 开发，实现了一个具备自恢复能力的乌龟自主导航系统。
+本项目基于 **Ubuntu 24.04** 与 **ROS 2 Jazzy** 开发，实现了一个完整的机器人自主导航任务链路。通过自定义 Service 与 Topic 通信，演示了从目标下发到闭环执行的标准 ROS 2 开发流程。
 
 ---
 
-## 🎥 实时演示 (Live Demo)
+## 🎥 项目演示 (Project Demo)
 
-![项目导航演示](./turtle_demo.gif)
-
-> 💡 **演示说明**：上方为自动播放的预览图。如需查看 1080P 高清录像及终端详细日志，请查看：[项目高清原片 (MP4)](./turtle_navigation_demo.mp4)。
-
-### 核心攻克：(2.30, 4.92) 坐标点死锁逻辑
-视频中展示了当小乌龟在特定浮点数坐标发生“计算卡顿”时，系统如何通过 **Force-Forward (强制推进)** 算法打破状态机死锁并平滑转向目标点。
+> **[➔ 点击此处直接查看：演示动画 (GIF)](./turtle_demo.gif)**
+>
+> **[➔ 点击此处查看：1080P 高清演示视频 (MP4)](./turtle_navigation_demo.mp4)**
+> 
+> *注：由于 GitHub 预览限制，若动图加载失败，请点击上方链接跳转查看。*
 
 ---
 
 ## 🏗️ 系统架构 (System Architecture)
 
-本项目采用模块化节点设计，确保了控制逻辑与底层仿真的解耦。
+本项目采用解耦的节点设计，确保了任务调度、运动控制与环境反馈的逻辑清晰。
 
-### 1. 计算图逻辑 (Computational Graph)
+### 1. 节点通信计算图 (Computational Graph)
 
 ```mermaid
-graph TD
-    Client[Client Node] -- "Service: SetGoal (x,y)" --> Nav[Navigation Node]
-    Obs[Obstacle Node] -- "Topic: /stop_signal (Bool)" --> Nav
-    Nav -- "Topic: /turtle1/cmd_vel (Twist)" --> Sim[Turtlesim]
-    Sim -- "Topic: /turtle1/pose (Pose)" --> Nav
-    
+graph LR
+    User[Client Node] -- "Service: SetGoal" --> Nav[Navigation Node]
+    Obs[Obstacle Node] -- "Topic: /stop_signal" --> Nav
+    Nav -- "Topic: /turtle1/cmd_vel" --> Sim[Turtlesim]
+    Sim -- "Topic: /turtle1/pose" --> Nav
+
     style Nav fill:#3498db,stroke:#2980b9,color:#fff
     style Sim fill:#2ecc71,stroke:#27ae60,color:#fff
+    style Obs fill:#f1c40f,stroke:#f39c12,color:#333
